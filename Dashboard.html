@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f6fa;
+      color: #333;
+    }
+
+    .header {
+      padding: 1rem 2rem;
+      background-color: #2575fc;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .search-bar {
+      width: 250px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .main {
+      padding: 1rem 2rem;
+      height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .posts-container {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .post {
+      background-color: white;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .post h3 {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .post p {
+      margin: 0;
+      color: #555;
+    }
+
+    .post-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
+    }
+
+    .post-button:hover {
+      background-color: #1a5cd6;
+    }
+
+    .posts-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .posts-container::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Welcome User</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Search posts..." />
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="posts-container">
+      <div class="post">
+        <h3>Post Title 1</h3>
+        <p>This is a sample post content. It's a great day to build something cool!</p>
+      </div>
+      <div class="post">
+        <h3>Post Title 2</h3>
+        <p>Another example of a post. You can add as many as you want.</p>
+      </div>
+      <div class="post">
+        <h3>Post Title 3</h3>
+        <p>Scrollable posts will appear here. Keep adding more and test scrolling.</p>
+      </div>
+      <div class="post">
+        <h3>Post Title 4</h3>
+        <p>Post body content goes here. This one is a little longer to test wrapping.</p>
+      </div>
+      <div class="post">
+        <h3>Post Title 5</h3>
+        <p>Short post example.</p>
+      </div>
+      <div class="post">
+        <h3>Post Title 6</h3>
+        <p>Yep, scrolling works fine!</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="post-button">+ Post</button>
+
+  <script>
+    document.querySelector('.post-button').addEventListener('click', function () {
+      window.location.href = 'E:/genbridge/Create_post.html';
+    });
+  </script>
+
+</body>
+</html>
