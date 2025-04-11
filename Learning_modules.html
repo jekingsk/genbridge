@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Learning Modules</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #2575fc;
+      margin-bottom: 20px;
+    }
+    #modules-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .module-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .module-card h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    .module-card iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Learning Modules</h1>
+  <div id="modules-container"></div>
+
+</body>
+</html>
+<script type="module">
+    // Firebase config (replace with your own)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+  
+    async function fetchModules() {
+      const modulesCol = collection(db, "modules");
+      const moduleSnapshot = await getDocs(modulesCol);
+      const moduleList = moduleSnapshot.docs.map(doc => doc.data());
+      displayModules(moduleList);
+    }
+  
+    function displayModules(modules) {
+      const container = document.getElementById("modules-container");
+      modules.forEach(mod => {
+        const card = document.createElement("div");
+        card.className = "module-card";
+        card.innerHTML = `
+          <h3>${mod.title}</h3>
+          <p>${mod.description}</p>
+          ${mod.videoUrl ? <iframe src="${mod.videoUrl}" frameborder="0" allowfullscreen></iframe> : ""}
+        `;
+        container.appendChild(card);
+      });
+    }
+  
+    fetchModules();
+  </script>
