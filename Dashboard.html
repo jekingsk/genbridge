@@ -4,81 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
-
+  
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f6fa;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7fc;
       color: #333;
     }
-
+  
     .header {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
       padding: 1rem 2rem;
-      background-color: #2575fc;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
+  
     .header h1 {
       margin: 0;
       font-size: 1.8rem;
     }
-
-    .search-bar {
-      width: 250px;
-    }
-
-    .search-bar input {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-
-    .main {
-      padding: 1rem 2rem;
-      height: calc(100vh - 80px);
+  
+    .header-controls {
       display: flex;
-      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
     }
-
-    .posts-container {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 0.5rem;
+  
+    .search-bar input {
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      width: 220px;
+      transition: all 0.2s ease;
     }
-
-    .post {
+  
+    .profile-btn {
+      padding: 0.5rem 1rem;
       background-color: white;
-      margin-bottom: 1rem;
+      color: #2575fc;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+  
+    .profile-btn:hover {
+      background-color: #e6ecfc;
+      transform: scale(1.05);
+    }
+  
+    .profile-btn:active {
+      transform: scale(0.95);
+    }
+  
+    .main {
+      padding: 2rem;
+    }
+  
+    .posts-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+  
+    .post {
+      background: white;
       padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease;
     }
-
+  
+    .post:hover {
+      transform: translateY(-3px);
+    }
+  
     .post h3 {
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.5rem;
+      color: #2575fc;
     }
-
+  
     .post p {
       margin: 0;
       color: #555;
     }
-
+  
     .post-button {
       position: fixed;
       bottom: 20px;
-      left: 20px;
+      right: 20px;
       background-color: #2575fc;
       color: white;
       border: none;
@@ -86,67 +113,236 @@
       font-size: 1rem;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      transition: background-color 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.15s ease, background-color 0.2s;
     }
-
+  
     .post-button:hover {
       background-color: #1a5cd6;
+      transform: scale(1.07);
     }
-
-    .posts-container::-webkit-scrollbar {
-      width: 8px;
+  
+    .post-button:active {
+      transform: scale(0.95);
     }
-
-    .posts-container::-webkit-scrollbar-thumb {
-      background-color: #ccc;
+  
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+      animation: fadeIn 0.3s ease forwards;
+    }
+  
+    .modal.show {
+      display: flex;
+    }
+  
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
       border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      transform: translateY(-20px);
+      opacity: 0;
+      animation: slideIn 0.3s ease forwards;
     }
-  </style>
+  
+    .modal-content button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.2rem;
+      border: none;
+      background-color: #2575fc;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+  
+    .modal-content button:hover {
+      background-color: #1a5cd6;
+      transform: scale(1.05);
+    }
+  
+    .modal-content button:active {
+      transform: scale(0.95);
+    }
+  
+    .modal-content input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+  
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.2rem;
+      text-align: left;
+    }
+  
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>  
 </head>
 <body>
 
   <div class="header">
-    <h1>Welcome User</h1>
-    <div class="search-bar">
-      <input type="text" placeholder="Search posts..." />
+    <h1>Welcome, User</h1>
+    <div class="header-controls">
+      <div class="search-bar">
+        <input type="text" placeholder="Search posts..." id="searchInput" />
+      </div>
+      <button class="profile-btn" id="profileBtn">👤 Profile</button>
     </div>
   </div>
 
   <div class="main">
-    <div class="posts-container">
-      <div class="post">
-        <h3>Post Title 1</h3>
-        <p>This is a sample post content. It's a great day to build something cool!</p>
+    <div class="posts-container" id="postsContainer">
+      <!-- Posts will be inserted here -->
+    </div>
+  </div>
+
+  <button class="post-button" id="addPostBtn">+ Post</button>
+
+  <!-- Profile Modal -->
+  <div class="modal" id="profileModal">
+    <div class="modal-content">
+      <h2>User Profile</h2>
+
+      <!-- View Profile -->
+      <div id="profileView">
+        <p><strong>Name:</strong> <span id="viewName">John Doe</span></p>
+        <p><strong>Email:</strong> <span id="viewEmail">john.doe@example.com</span></p>
+        <button onclick="switchToEdit()">Edit Profile</button>
+        <button onclick="closeModal()">Close</button>
       </div>
-      <div class="post">
-        <h3>Post Title 2</h3>
-        <p>Another example of a post. You can add as many as you want.</p>
-      </div>
-      <div class="post">
-        <h3>Post Title 3</h3>
-        <p>Scrollable posts will appear here. Keep adding more and test scrolling.</p>
-      </div>
-      <div class="post">
-        <h3>Post Title 4</h3>
-        <p>Post body content goes here. This one is a little longer to test wrapping.</p>
-      </div>
-      <div class="post">
-        <h3>Post Title 5</h3>
-        <p>Short post example.</p>
-      </div>
-      <div class="post">
-        <h3>Post Title 6</h3>
-        <p>Yep, scrolling works fine!</p>
+
+      <!-- Edit Profile -->
+      <div id="profileEdit" style="display: none;">
+        <label for="editName"><strong>Name:</strong></label>
+        <input type="text" id="editName" />
+
+        <label for="editEmail"><strong>Email:</strong></label>
+        <input type="email" id="editEmail" />
+
+        <button onclick="saveProfile()">Save</button>
+        <button onclick="cancelEdit()">Cancel</button>
       </div>
     </div>
   </div>
 
-  <button class="post-button">+ Post</button>
-
   <script>
-    document.querySelector('.post-button').addEventListener('click', function () {
-      window.location.href = 'E:/genbridge/Create_post.html';
+    const posts = [
+      { title: "Post Title 1", content: "This is a sample post content. It's a great day to build something cool!" },
+      { title: "Post Title 2", content: "Another example of a post. You can add as many as you want." },
+      { title: "Post Title 3", content: "Scrollable posts will appear here. Keep adding more and test scrolling." },
+      { title: "Post Title 4", content: "Post body content goes here. This one is a little longer to test wrapping." },
+      { title: "Post Title 5", content: "Short post example." },
+      { title: "Post Title 6", content: "Yep, scrolling works fine!" }
+    ];
+
+    const postsContainer = document.getElementById("postsContainer");
+    const searchInput = document.getElementById("searchInput");
+
+    function renderPosts(filter = "") {
+      postsContainer.innerHTML = "";
+      posts
+        .filter(post =>
+          post.title.toLowerCase().includes(filter.toLowerCase()) ||
+          post.content.toLowerCase().includes(filter.toLowerCase())
+        )
+        .forEach(post => {
+          const div = document.createElement("div");
+          div.className = "post";
+          div.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p>`;
+          postsContainer.appendChild(div);
+        });
+    }
+
+    searchInput.addEventListener("input", () => {
+      renderPosts(searchInput.value);
+    });
+
+    renderPosts();
+
+    // Profile modal logic
+    const profileModal = document.getElementById("profileModal");
+    const profileBtn = document.getElementById("profileBtn");
+    const profileView = document.getElementById("profileView");
+    const profileEdit = document.getElementById("profileEdit");
+    const viewName = document.getElementById("viewName");
+    const viewEmail = document.getElementById("viewEmail");
+    const editName = document.getElementById("editName");
+    const editEmail = document.getElementById("editEmail");
+
+    profileBtn.addEventListener("click", () => {
+      profileModal.classList.add("show");
+      switchToView();
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === profileModal) {
+        profileModal.classList.add("show");
+      }
+    });
+
+    function switchToEdit() {
+      profileEdit.style.display = "block";
+      profileView.style.display = "none";
+      editName.value = viewName.textContent;
+      editEmail.value = viewEmail.textContent;
+    }
+
+    function switchToView() {
+      profileEdit.style.display = "none";
+      profileView.style.display = "block";
+    }
+
+    function closeModal() {
+      profileModal.classList.remove("show");
+    }
+
+    function cancelEdit() {
+      switchToView();
+    }
+
+    function saveProfile() {
+      const name = editName.value.trim();
+      const email = editEmail.value.trim();
+
+      if (name && email) {
+        viewName.textContent = name;
+        viewEmail.textContent = email;
+        alert("Profile updated successfully!");
+        switchToView();
+      } else {
+        alert("Please fill out all fields.");
+      }
+    }
+
+    // Add post redirection
+    document.getElementById("addPostBtn").addEventListener("click", () => {
+      window.location.href = "E:/genbridge/Create_post.html";
     });
   </script>
 
