@@ -46,7 +46,7 @@
       transition: all 0.2s ease;
     }
 
-    .profile-btn, .modules-btn {
+    .profile-btn {
       padding: 0.5rem 1rem;
       background-color: white;
       color: #2575fc;
@@ -57,12 +57,12 @@
       transition: transform 0.15s ease;
     }
 
-    .profile-btn:hover, .modules-btn:hover {
+    .profile-btn:hover {
       background-color: #e6ecfc;
       transform: scale(1.05);
     }
 
-    .profile-btn:active, .modules-btn:active {
+    .profile-btn:active {
       transform: scale(0.95);
     }
 
@@ -84,6 +84,7 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
       overflow-y: auto;
       transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
     .post:hover {
@@ -202,6 +203,19 @@
       from { transform: translateY(-20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+
+    .progress {
+      margin-top: 1rem;
+      background: #eee;
+      border-radius: 8px;
+      height: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #2575fc;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -212,9 +226,6 @@
       <div class="search-bar">
         <input type="text" placeholder="Search posts..." id="searchInput" />
       </div>
-      <a href="#">
-        <button class="modules-btn">📘 Learning Modules</button>
-      </a>
       <button class="profile-btn" id="profileBtn">👤 Profile</button>
     </div>
   </div>
@@ -223,14 +234,16 @@
     <div class="posts-container" id="postsContainer"></div>
   </div>
 
-  <button class="post-button" id="addPostBtn">+ Post</button>
+  <button class="post-button" id="addPostBtn"><a href="Create_post.html">+ Post </a></button>
 
   <div class="modal" id="profileModal">
     <div class="modal-content">
       <h2>User Profile</h2>
       <div id="profileView">
-        <p><strong>Name:</strong> <span id="viewName">John Doe</span></p>
-        <p><strong>Email:</strong> <span id="viewEmail">john.doe@example.com</span></p>
+        <p><strong>Name:</strong> <span id="viewName">jeking</span></p>
+        <p><strong>Email:</strong> <span id="viewEmail">jekingsk@gmail.com</span></p>
+        <h3>Your Courses</h3>
+        <div id="enrolledCourses"></div>
         <button onclick="switchToEdit()">Edit Profile</button>
         <button onclick="closeModal()">Close</button>
       </div>
@@ -247,43 +260,62 @@
 
   <script>
     const posts = [
-  {
-    title: "Weaving Wisdom",
-    content: "Master artisan Meera shares her 40-year journey in handloom weaving.",
-    type: "image",
-    media: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Loomwork.jpg/330px-Loomwork.jpg"
-  },
-  {
-    title: "Crafting Stories",
-    content: "Discover how storytelling is woven into every basket by tribal artisans.",
-    type: "video",
-    media: "https://www.w3schools.com/html/mov_bbb.mp4"
-  },
-  {
-    title: "From Tools to Techniques",
-    content: "Watch how to restore wood carving tools by a retiring expert.",
-    type: "3d",
-    media: "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-  },
-  {
-    title: "Why Documenting Matters",
-    content: "GenBridge helps artisans turn their techniques into digital legacies.",
-    type: "video",
-    media: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
-  },
-  {
-    title: "The Next Generation",
-    content: "A young apprentice learns pottery through GenBridge mentorship.",
-    type: "image",
-    media: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsBV7IOlPziHPGxPgJ8jILafg3XBxE6JuUmA&s"
-  }
-];
-
+      {
+        id: 1,
+        title: "Weaving Wisdom",
+        content: "Master artisan Meera shares her 40-year journey in handloom weaving.",
+        type: "image",
+        media: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Loomwork.jpg/330px-Loomwork.jpg"
+      },
+      {
+        id: 2,
+        title: "Crafting Stories",
+        content: "Discover how storytelling is woven into every basket by tribal artisans.",
+        type: "video",
+        media: "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      {
+        id: 3,
+        title: "From Tools to Techniques",
+        content: "Watch how to restore wood carving tools by a retiring expert.",
+        type: "3d",
+        media: "https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+      },
+      {
+        id: 4,
+        title: "Why Documenting Matters",
+        content: "GenBridge helps artisans turn their techniques into digital legacies.",
+        type: "video",
+        media: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      },
+      {
+        id: 5,
+        title: "The Next Generation",
+        content: "A young apprentice learns pottery through GenBridge mentorship.",
+        type: "image",
+        media: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsBV7IOlPziHPGxPgJ8jILafg3XBxE6JuUmA&s"
+      },
+      {
+        id:6,
+        title: "Threads of Time",
+        content: "Explore the ancient art of Kalamkari — a traditional hand-painted textile technique passed down through generations.",
+        type: "image",
+        media: "https://necessityestore.in/wp-content/uploads/2020/12/c08af1f1-391f-4c4d-91cb-a964a49babb7.jpg"
+}
+    
+    ];
 
     let loadedCount = 0;
-    const BATCH_SIZE = 4;
+    const BATCH_SIZE = 6;
     const postsContainer = document.getElementById("postsContainer");
     const searchInput = document.getElementById("searchInput");
+
+    // Simulate user profile with enrolled courses and progress
+    const userProfile = {
+      name: "jeking",
+      email: "jekingsk@gmail.com",
+      enrolledCourses: []
+    };
 
     function renderPosts(filter = "") {
       postsContainer.innerHTML = "";
@@ -302,6 +334,7 @@
       remaining.forEach(post => {
         const div = document.createElement("div");
         div.className = "post";
+        div.onclick = () => enrollInCourse(post);
 
         let mediaHTML = "";
         if (post.type === "image") {
@@ -344,6 +377,34 @@
 
     renderPosts();
 
+    function enrollInCourse(course) {
+      if (!userProfile.enrolledCourses.find(c => c.id === course.id)) {
+        userProfile.enrolledCourses.push({ ...course, progress: 0 });
+        alert(`Enrolled in course: ${course.title}`);
+      } else {
+        alert(`Already enrolled in: ${course.title}`);
+      }
+      updateProfile();
+    }
+
+    function updateProfile() {
+      const enrolledCoursesDiv = document.getElementById("enrolledCourses");
+      enrolledCoursesDiv.innerHTML = '';
+
+      userProfile.enrolledCourses.forEach(course => {
+        const progress = course.progress;
+        enrolledCoursesDiv.innerHTML += `
+          <div>
+            <h4>${course.title}</h4>
+            <div class="progress">
+              <div class="progress-bar" style="width: ${progress}%"></div>
+            </div>
+            <p>Progress: ${progress}%</p>
+          </div>
+        `;
+      });
+    }
+
     // Profile modal logic
     const profileModal = document.getElementById("profileModal");
     const profileBtn = document.getElementById("profileBtn");
@@ -357,6 +418,7 @@
     profileBtn.addEventListener("click", () => {
       profileModal.classList.add("show");
       switchToView();
+      updateProfile();
     });
 
     function switchToEdit() {
@@ -369,6 +431,8 @@
     function switchToView() {
       profileEdit.style.display = "none";
       profileView.style.display = "block";
+      viewName.textContent = userProfile.name;
+      viewEmail.textContent = userProfile.email;
     }
 
     function closeModal() {
@@ -384,19 +448,14 @@
       const email = editEmail.value.trim();
 
       if (name && email) {
-        viewName.textContent = name;
-        viewEmail.textContent = email;
+        userProfile.name = name;
+        userProfile.email = email;
         alert("Profile updated successfully!");
         switchToView();
       } else {
         alert("Please fill out all fields.");
       }
     }
-
-    document.getElementById("addPostBtn").addEventListener("click", () => {
-      alert("Redirecting to create post page...");
-      // window.location.href = "Create_post.html";
-    });
   </script>
 
 </body>
