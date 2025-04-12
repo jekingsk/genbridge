@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Module Detail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7fc;
+      color: #333;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      color: #2575fc;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 2rem;
+      color: #555;
+      font-size: 1.1rem;
+    }
+
+    iframe {
+      width: 100%;
+      height: 400px;
+      border-radius: 12px;
+      border: none;
+      margin-bottom: 2rem;
+    }
+
+    .back-btn {
+      padding: 0.6rem 1.2rem;
+      background-color: #2575fc;
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #1a5cd6;
+      transform: scale(1.05);
+    }
+
+    .back-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 id="moduleTitle">Loading...</h1>
+    <p id="moduleDescription">Please wait while we load the content.</p>
+    
+    <!-- Embedded video -->
+    <iframe id="moduleVideo" src="" allowfullscreen></iframe>
+
+    <button class="back-btn" onclick="window.history.back()">← Back to Modules</button>
+  </div>
+
+  <script>
+    // Sample module data
+    const moduleData = [
+      {
+        title: "Introduction to Traditional Craft",
+        description: "Understand the essence and value of legacy skills.",
+        videoUrl: "https://www.youtube.com/embed/SAMPLE_VIDEO_1"
+      },
+      {
+        title: "Weaving Techniques",
+        description: "Learn different weaving patterns from veteran artisans.",
+        videoUrl: "https://www.youtube.com/embed/SAMPLE_VIDEO_2"
+      },
+      {
+        title: "Pottery Basics",
+        description: "Master the foundational pottery skills from seniors.",
+        videoUrl: "https://www.youtube.com/embed/SAMPLE_VIDEO_3"
+      },
+      {
+        title: "Wood Carving 101",
+        description: "An introduction to traditional wood carving tools and methods.",
+        videoUrl: "https://www.youtube.com/embed/SAMPLE_VIDEO_4"
+      },
+      {
+        title: "Dyeing & Natural Colors",
+        description: "Explore natural dye techniques passed through generations.",
+        videoUrl: "https://www.youtube.com/embed/SAMPLE_VIDEO_5"
+      }
+    ];
+
+    // Get module index from query string (e.g., ?module=2)
+    const urlParams = new URLSearchParams(window.location.search);
+    const moduleIndex = parseInt(urlParams.get("module")) || 0;
+
+    const titleEl = document.getElementById("moduleTitle");
+    const descEl = document.getElementById("moduleDescription");
+    const videoEl = document.getElementById("moduleVideo");
+
+    const selectedModule = moduleData[moduleIndex];
+
+    if (selectedModule) {
+      titleEl.textContent = selectedModule.title;
+      descEl.textContent = selectedModule.description;
+      videoEl.src = selectedModule.videoUrl;
+    } else {
+      titleEl.textContent = "Module Not Found";
+      descEl.textContent = "The module you're trying to view does not exist.";
+      videoEl.style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

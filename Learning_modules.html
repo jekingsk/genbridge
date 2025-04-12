@@ -2,85 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Learning Modules</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
       margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      color: #2575fc;
-      margin-bottom: 20px;
-    }
-    #modules-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    .module-card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .module-card h3 {
-      margin-top: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7fc;
       color: #333;
     }
-    .module-card iframe {
-      width: 100%;
-      height: 200px;
-      border-radius: 10px;
-      margin-top: 10px;
+
+    .header {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      padding: 1rem 2rem;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .search-bar input {
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      width: 220px;
+    }
+
+    .main {
+      padding: 2rem;
+    }
+
+    .modules-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .module {
+      background: white;
+      padding: 1.2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .module:hover {
+      transform: translateY(-3px);
+    }
+
+    .module h3 {
+      margin: 0 0 0.5rem;
+      color: #2575fc;
+    }
+
+    .module p {
+      flex-grow: 1;
+      margin-bottom: 1rem;
+      color: #555;
+    }
+
+    .start-btn {
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .start-btn:hover {
+      background-color: #1a5cd6;
+      transform: scale(1.05);
+    }
+
+    .start-btn:active {
+      transform: scale(0.95);
     }
   </style>
 </head>
 <body>
 
-  <h1>Learning Modules</h1>
-  <div id="modules-container"></div>
+  <div class="header">
+    <h1>Learning Modules</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Search modules..." id="searchInput" />
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="modules-container" id="modulesContainer">
+      <!-- Modules will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    const modules = [
+      { title: "Introduction to Traditional Craft", description: "Understand the essence and value of legacy skills." },
+      { title: "Weaving Techniques", description: "Learn different weaving patterns from veteran artisans." },
+      { title: "Pottery Basics", description: "Master the foundational pottery skills from seniors." },
+      { title: "Wood Carving 101", description: "An introduction to traditional wood carving tools and methods." },
+      { title: "Dyeing & Natural Colors", description: "Explore natural dye techniques passed through generations." }
+    ];
+
+    const container = document.getElementById("modulesContainer");
+    const searchInput = document.getElementById("searchInput");
+
+    function renderModules(filter = "") {
+      container.innerHTML = "";
+      modules
+        .filter(module =>
+          module.title.toLowerCase().includes(filter.toLowerCase()) ||
+          module.description.toLowerCase().includes(filter.toLowerCase())
+        )
+        .forEach((module, index) => {
+          const div = document.createElement("div");
+          div.className = "module";
+          div.innerHTML = `
+            <h3>${module.title}</h3>
+            <p>${module.description}</p>
+            <button class="start-btn" onclick="startLearning(${index})">Start Learning</button>
+          `;
+          container.appendChild(div);
+        });
+    }
+
+    function startLearning(index) {
+  window.location.href = `module_detail.html?module=${index}`;
+}
+
+
+    searchInput.addEventListener("input", () => {
+      renderModules(searchInput.value);
+    });
+
+    renderModules();
+  </script>
 
 </body>
 </html>
-<script type="module">
-    // Firebase config (replace with your own)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
-    };
-  
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-  
-    async function fetchModules() {
-      const modulesCol = collection(db, "modules");
-      const moduleSnapshot = await getDocs(modulesCol);
-      const moduleList = moduleSnapshot.docs.map(doc => doc.data());
-      displayModules(moduleList);
-    }
-  
-    function displayModules(modules) {
-      const container = document.getElementById("modules-container");
-      modules.forEach(mod => {
-        const card = document.createElement("div");
-        card.className = "module-card";
-        card.innerHTML = `
-          <h3>${mod.title}</h3>
-          <p>${mod.description}</p>
-          ${mod.videoUrl ? <iframe src="${mod.videoUrl}" frameborder="0" allowfullscreen></iframe> : ""}
-        `;
-        container.appendChild(card);
-      });
-    }
-  
-    fetchModules();
-  </script>
